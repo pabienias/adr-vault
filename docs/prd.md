@@ -85,12 +85,15 @@
 ## 5. Technical Architecture & Stack
 
 ### 5.1 Core Technologies
-- **Repository:** Monorepo (e.g., `pnpm workspaces` or `Turborepo`).
-- **Frontend (Presentation):** Next.js (App Router), React, Tailwind CSS, shadcn/ui.
-- **Backend (REST API):** Fastify (Node.js).
+- **Runtime:** Node.js 22 LTS (pinned via `.nvmrc`).
+- **Repository:** Monorepo — pnpm 10 workspaces + Turborepo.
+- **Frontend (Presentation):** Next.js 16 (App Router), React 19, Tailwind CSS 4, shadcn v4 (Base UI).
+- **Backend (REST API):** Fastify 5 (Node.js), dev mode via tsx.
 - **Database & Auth:** Supabase (PostgreSQL, Auth, pgvector).
 - **WYSIWYG Editor:** Tiptap.
 - **AI Integration:** OpenAI API (via official Node.js SDK).
+- **Linting & Formatting:** Biome (replaces ESLint + Prettier).
+- **TypeScript:** Strict mode with shared `tsconfig.base.json` extended per workspace.
 
 ### 5.2 Domain Driven Design (DDD) Architecture
 The backend will follow a "Modular Monolith" approach, divided into distinct Bounded Contexts to ensure scalability and maintainability.
@@ -116,23 +119,31 @@ To prevent AI abuse and ensure the agent only answers questions related to ADRs,
 ## 6. Data Model Strategy
 
 ### 6.1 Core Entities
-- **`profiles`:** Extends Supabase Auth users. Stores user metadata and future role definitions.
-- **`user_ai_usage`:** Tracks daily token/request usage per user to enforce limits.
-- **`adrs`:** Stores the ADR documents. 
-  - **Content Storage:** The entire document body is stored as a single field (JSONB or HTML) to provide maximum flexibility for the Tiptap editor.
-  - **Metadata:** Includes `status`, `creation_method`, `last_updated_at`, `last_updated_by`, and `ai_summary`.
-- **`adr_links`:** A relationship table connecting two ADRs with a specific `link_type` (e.g., "Supersedes").
-- **`adr_embeddings`:** (Managed via pgvector) Stores vector representations of ADR content for semantic search.
+- **`profiles`:** Extends Supabase `auth.users` with app-level fields (`email`, `display_name`). Auto-created via a Postgres trigger on user signup — no manual creation needed.
+- **`user_ai_usage`:** Tracks daily token usage per user (one row per user per day via `UNIQUE(user_id, usage_date)`). Limits enforced at application layer as constants in `packages/core`.
+- **`adrs`:** Stores the ADR documents.
+  - **Content Storage:** JSONB — stores Tiptap's native JSON document tree.
+  - **Metadata:** Includes `status`, `creation_method`, `author_id`, `ai_summary`, `created_at`, and `updated_at` (auto-managed via Postgres trigger).
+  - **`adr_number`:** Auto-incrementing sequential identifier (`GENERATED ALWAYS AS IDENTITY`) for human-readable display (e.g., ADR-001).
+  - **Soft Delete:** Uses `deleted_at` timestamp — `NULL` means active. RLS policies automatically filter soft-deleted rows from reads.
+- **`adr_links`:** A relationship table connecting two ADRs with a specific `link_type` (e.g., "Supersedes"). Enforces no self-links (`CHECK`) and no duplicates (`UNIQUE` on source, target, type).
+- **`adr_embeddings`:** Deferred to Phase 4. Will use pgvector to store vector representations of ADR content for semantic search.
+
+### 6.2 Database Conventions
+- **Column naming:** snake_case in Postgres, camelCase transformation at the API layer.
+- **Enum storage:** Native Postgres `CREATE TYPE ... AS ENUM` with PascalCase values matching TypeScript enums.
+- **Timestamps:** Postgres-managed (`DEFAULT now()`, `BEFORE UPDATE` trigger for `updated_at`).
+- **Migrations:** Separate files per logical unit (enums, profiles, adrs, adr_links, user_ai_usage, triggers, RLS policies).
 
 ---
 
 ## 7. Phased Implementation Plan
 
-### Phase 1: Foundation
-- Initialize Monorepo structure (`apps/web`, `apps/api`, `packages/core`).
-- Scaffold Next.js frontend and Fastify backend.
-- Set up Supabase project, Auth, and initial database schema with RLS.
-- Implement basic UI shell using shadcn/ui.
+### Phase 1: Foundation ✅
+- ~~Initialize Monorepo structure (`apps/web`, `apps/api`, `packages/core`).~~ Done.
+- ~~Scaffold Next.js frontend and Fastify backend.~~ Done — Next.js 16, Fastify 5, shared `packages/core` with types/enums/constants.
+- ~~Implement basic UI shell using shadcn/ui.~~ Done — shadcn v4 (Base UI) with initial components.
+- Set up Supabase project, Auth, and initial database schema with RLS. — Schema designed (see `.ai/dev/planning/supabase-initial-schema.md`), implementation pending.
 
 ### Phase 2: AI Drafting First
 - Integrate OpenAI Node.js SDK in the `intelligence` module.
