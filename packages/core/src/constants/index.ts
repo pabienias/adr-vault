@@ -1,0 +1,1 @@
+export { MAX_ADR_CHARS, MAX_AI_DRAFT_CHARS, MAX_BRAIN_DUMP_CHARS } from './adr.js';
