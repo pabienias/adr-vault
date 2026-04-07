@@ -1,5 +1,7 @@
 # Product Requirements Document (PRD) - ADR Vault
 
+> **Attachments:** [User Stories](./user-stories.md)
+
 ## 1. Product Overview
 
 ### 1.1 Vision
@@ -139,27 +141,46 @@ To prevent AI abuse and ensure the agent only answers questions related to ADRs,
 
 ## 7. Phased Implementation Plan
 
-### Phase 1: Foundation ✅
+### Phase 1a: Foundation ✅
 - ~~Initialize Monorepo structure (`apps/web`, `apps/api`, `packages/core`).~~ Done.
 - ~~Scaffold Next.js frontend and Fastify backend.~~ Done — Next.js 16, Fastify 5, shared `packages/core` with types/enums/constants.
 - ~~Implement basic UI shell using shadcn/ui.~~ Done — shadcn v4 (Base UI) with initial components.
-- Set up Supabase project, Auth, and initial database schema with RLS. — Schema designed (see `.ai/dev/planning/supabase-initial-schema.md`), implementation pending.
+- ~~Set up Supabase project, Auth, and initial database schema with RLS.~~ Done — Schema designed and implemented (see `.ai/dev/planning/supabase-initial-schema.md`). All migrations, RLS policies, triggers, and indexes applied.
 
-### Phase 2: AI Drafting First
-- Integrate OpenAI Node.js SDK in the `intelligence` module.
-- Build the "brain dump" input UI and backend endpoint for generating structured ADR drafts.
-- Implement backend AI usage tracking and limits.
-- Build basic list views and status management.
+### Phase 1b: Authentication
+- Implement user registration (email + password) with Supabase Auth.
+- Implement login flow with email and password.
+- Implement logout functionality.
+- Implement session persistence across browser refreshes.
+- Build authentication UI pages (register, login) and protected route guards.
 
-### Phase 3: Manual Editing & Tiptap
+**User Stories:** US-AUTH-01, US-AUTH-02, US-AUTH-03, US-AUTH-05
+
+> **Note:** US-AUTH-04 (password reset) is deferred to a later phase as a non-critical enhancement.
+
+### Phase 2: Core ADR CRUD & Editor
 - Integrate Tiptap WYSIWYG editor into the frontend.
-- Configure Tiptap extensions (Headings, Lists, Tables, Images).
-- Connect the editor to the backend for saving/updating the single-field document content.
-- Allow users to manually refine AI-generated drafts.
+- Configure Tiptap extensions (Headings, Lists, Tables, Code Blocks, Blockquotes, Images).
+- Build ADR create, detail view, edit, and soft-delete flows connected to the backend.
+- Enforce the 15,000-character document limit with a visible counter in the editor.
+- Build ADR list view with status filter and status management.
+- Display creation method provenance (`Manual`, `AI-generated`, `AI-generated & User-edited`) on list and detail views.
+
+**User Stories:** US-ADR-01, US-ADR-02, US-ADR-03, US-ADR-04, US-ADR-05, US-ADR-06, US-ADR-07, US-ADR-08, US-ADR-09
+
+### Phase 3: AI Drafting
+- Integrate OpenAI Node.js SDK in the `intelligence` module.
+- Build the "brain dump" input UI (5,000-character limit with counter) and backend endpoint for generating structured ADR drafts.
+- Load AI-generated draft directly into the Tiptap editor for refinement and saving via the Phase 2 infrastructure.
+- Implement backend AI usage tracking and daily limits; surface usage and limit states in the UI.
+
+**User Stories:** US-DRAFT-01, US-DRAFT-02, US-DRAFT-03, US-DRAFT-04, US-DRAFT-05, US-USAGE-01, US-USAGE-02, US-USAGE-03, US-USAGE-04
 
 ### Phase 4: Advanced AI (RAG)
 - Enable `pgvector` in Supabase and configure the `adr_embeddings` table.
 - Implement embedding generation on ADR save/update.
-- Build the dedicated "Search & Ask" page with semantic search capabilities.
-- Implement auto-summarization logic and the on-demand regeneration feature.
-- Implement AI-assisted linking suggestions.
+- Build the dedicated "Search & Ask" page with semantic search, RAG-based answers, citations, relevance thresholding, and OpenAI Moderation API integration.
+- Implement auto-summarization on ADR save/update and on-demand summary regeneration.
+- Implement ADR linking (create, view, remove) with relationship types.
+
+**User Stories:** US-SUMM-01, US-SUMM-02, US-SUMM-03, US-SUMM-04, US-SEARCH-01, US-SEARCH-02, US-SEARCH-03, US-SEARCH-04, US-SEARCH-05, US-SEARCH-06, US-SEARCH-07, US-LINK-01, US-LINK-02, US-LINK-03
