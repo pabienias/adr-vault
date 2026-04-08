@@ -1,6 +1,6 @@
 'use client';
 
-import type { FormEvent, ReactNode } from 'react';
+import type { ReactNode, SubmitEvent } from 'react';
 import type { FieldValues, UseFormReturn } from 'react-hook-form';
 
 type FormProps<TFieldValues extends FieldValues> = {
@@ -18,7 +18,7 @@ export function Form<TFieldValues extends FieldValues>({
 }: FormProps<TFieldValues>): ReactNode {
 	return (
 		<form
-			onSubmit={(e: FormEvent<HTMLFormElement>) => {
+			onSubmit={(e: SubmitEvent<HTMLFormElement>) => {
 				e.preventDefault();
 				void form.handleSubmit(onSubmit)(e);
 			}}
