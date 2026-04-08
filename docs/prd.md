@@ -75,7 +75,7 @@
 - **NFR-1.3:** Row Level Security (RLS) must be enforced at the database level (Supabase) to guarantee data integrity and access rules.
 
 ### 4.2 Performance & Architecture
-- **NFR-2.1:** The frontend must not communicate directly with the database. All data fetching, mutations, and business logic must route through the central REST API.
+- **NFR-2.1:** The frontend must not communicate directly with the database. All data fetching, mutations, and business logic must route through the central REST API. *(Note: This applies to data/business operations. Authentication operations (signup, signin, signout, token refresh) communicate directly with Supabase Auth per [ADR-001](./adrs/adr-001-authentication-authorisation-flow.md).)*
 - **NFR-2.2:** AI summaries must be pre-generated and stored in the database to ensure instant page load times for readers.
 
 ### 4.3 AI Security & Abuse Prevention
