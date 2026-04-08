@@ -1,7 +1,7 @@
 'use client';
 
+import { environmentManager, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { QueryClient, QueryClientProvider, environmentManager } from '@tanstack/react-query';
 
 function makeQueryClient(): QueryClient {
 	return new QueryClient({
@@ -13,7 +13,7 @@ function makeQueryClient(): QueryClient {
 	});
 }
 
-let browserQueryClient: QueryClient | undefined = undefined;
+let browserQueryClient: QueryClient | undefined;
 
 function getQueryClient(): QueryClient {
 	if (environmentManager.isServer()) {

@@ -6,7 +6,9 @@ export function createClient(): SupabaseClient {
 	const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 	if (!supabaseUrl || !supabaseAnonKey) {
-		throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY env variables');
+		throw new Error(
+			'Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY env variables',
+		);
 	}
 
 	return createBrowserClient(supabaseUrl, supabaseAnonKey);
