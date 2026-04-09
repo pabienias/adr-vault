@@ -1,6 +1,6 @@
-import type { AdrLinkType } from '../enums/adr-link-type.js';
-import type { AdrStatus } from '../enums/adr-status.js';
-import type { CreationMethod } from '../enums/creation-method.js';
+import type { AdrLinkType } from '../enums/adr-link-type';
+import type { AdrStatus } from '../enums/adr-status';
+import type { CreationMethod } from '../enums/creation-method';
 
 export interface Adr {
 	id: string;
