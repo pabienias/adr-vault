@@ -67,9 +67,11 @@ describe('RegistrationForm', () => {
 
 		expect(getInput('email')).toBeInTheDocument();
 		expect(getInput('password')).toBeInTheDocument();
+		expect(getInput('confirmPassword')).toBeInTheDocument();
 		expect(getInput('displayName')).toBeInTheDocument();
 		expect(screen.getByText('Email')).toBeInTheDocument();
 		expect(screen.getByText('Password')).toBeInTheDocument();
+		expect(screen.getByText('Confirm password')).toBeInTheDocument();
 		expect(screen.getByText('Display name')).toBeInTheDocument();
 		expect(screen.getByRole('button', { name: 'Create account' })).toBeInTheDocument();
 	});
@@ -111,6 +113,23 @@ describe('RegistrationForm', () => {
 		expect(screen.getByText('An account with this email already exists.')).toBeInTheDocument();
 	});
 
+	it('shows error when passwords do not match', async () => {
+		const user = userEvent.setup();
+		render(<RegistrationForm />, { wrapper: createWrapper() });
+
+		await user.type(getInput('email'), 'test@example.com');
+		await user.type(getInput('password'), 'securepass');
+		await user.type(getInput('confirmPassword'), 'differentpass');
+		await user.type(getInput('displayName'), 'Alice');
+		await user.click(screen.getByRole('button', { name: 'Create account' }));
+
+		await waitFor(() => {
+			expect(screen.getByText('Passwords do not match')).toBeInTheDocument();
+		});
+
+		expect(mockMutateAsync).not.toHaveBeenCalled();
+	});
+
 	it('calls mutateAsync and redirects on success', async () => {
 		mockMutateAsync.mockResolvedValue({});
 		const user = userEvent.setup();
@@ -119,6 +138,7 @@ describe('RegistrationForm', () => {
 
 		await user.type(getInput('email'), 'test@example.com');
 		await user.type(getInput('password'), 'securepass');
+		await user.type(getInput('confirmPassword'), 'securepass');
 		await user.type(getInput('displayName'), 'Alice');
 		await user.click(screen.getByRole('button', { name: 'Create account' }));
 

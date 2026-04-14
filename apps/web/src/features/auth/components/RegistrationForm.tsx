@@ -9,15 +9,16 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { useRegister } from '../hooks/use-register';
-import type { RegistrationFormValues } from '../schemas/registration-schema';
-import { registrationSchema } from '../schemas/registration-schema';
+import type { RegistrationFormData } from '../schemas/registration-schema';
+import { registrationFormSchema } from '../schemas/registration-schema';
 
 export function RegistrationForm(): ReactNode {
-	const form = useForm<RegistrationFormValues>({
-		resolver: zodResolver(registrationSchema),
+	const form = useForm<RegistrationFormData>({
+		resolver: zodResolver(registrationFormSchema),
 		defaultValues: {
 			email: '',
 			password: '',
+			confirmPassword: '',
 			displayName: '',
 		},
 	});
@@ -27,7 +28,7 @@ export function RegistrationForm(): ReactNode {
 
 	const { errors } = form.formState;
 
-	async function onSubmit(values: RegistrationFormValues): Promise<void> {
+	async function onSubmit({ confirmPassword: _, ...values }: RegistrationFormData): Promise<void> {
 		try {
 			await mutation.mutateAsync(values);
 			router.push('/');
@@ -57,6 +58,16 @@ export function RegistrationForm(): ReactNode {
 				<FieldLabel>Password</FieldLabel>
 				<Input type="password" {...form.register('password')} aria-invalid={!!errors.password} />
 				<FieldError>{errors.password?.message}</FieldError>
+			</Field>
+
+			<Field data-invalid={!!errors.confirmPassword}>
+				<FieldLabel>Confirm password</FieldLabel>
+				<Input
+					type="password"
+					{...form.register('confirmPassword')}
+					aria-invalid={!!errors.confirmPassword}
+				/>
+				<FieldError>{errors.confirmPassword?.message}</FieldError>
 			</Field>
 
 			<Field data-invalid={!!errors.displayName}>

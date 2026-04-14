@@ -26,3 +26,14 @@ export const registrationSchema = z.object({
 });
 
 export type RegistrationFormValues = z.infer<typeof registrationSchema>;
+
+export const registrationFormSchema = registrationSchema
+	.extend({
+		confirmPassword: z.string(),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: 'Passwords do not match',
+		path: ['confirmPassword'],
+	});
+
+export type RegistrationFormData = z.infer<typeof registrationFormSchema>;
