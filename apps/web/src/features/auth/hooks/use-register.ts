@@ -20,7 +20,7 @@ async function registerUser(values: RegistrationFormValues): Promise<AuthRespons
 	});
 
 	if (error) {
-		throw new Error(mapAuthError(error));
+		throw new Error(mapAuthError(error, 'registration'));
 	}
 
 	if (!data.user) {
