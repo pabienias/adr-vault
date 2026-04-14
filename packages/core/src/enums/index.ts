@@ -1,3 +1,3 @@
-export { AdrLinkType } from './adr-link-type.js';
-export { AdrStatus } from './adr-status.js';
-export { CreationMethod } from './creation-method.js';
+export { AdrLinkType } from './adr-link-type';
+export { AdrStatus } from './adr-status';
+export { CreationMethod } from './creation-method';

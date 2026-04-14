@@ -1,2 +1,2 @@
-export type { Adr, AdrLink } from './adr.js';
-export type { UserProfile } from './user.js';
+export type { Adr, AdrLink } from './adr';
+export type { UserProfile } from './user';
