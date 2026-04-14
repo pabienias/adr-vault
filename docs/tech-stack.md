@@ -33,11 +33,14 @@ supabase/       → migrations & local dev config
 | clsx + tailwind-merge | latest | Conditional className composition |
 | lucide-react | 1.x | Icon library |
 | tw-animate-css | 1.x | Tailwind animation utilities |
+| @supabase/supabase-js | 2.x | Supabase Auth client ([ADR-001](./adrs/adr-001-authentication-authorisation-flow.md)) |
+| @supabase/ssr | latest | SSR cookie helpers for Supabase Auth |
+| react-hook-form | 7.x | Form state management |
+| @hookform/resolvers | 5.x | Validation resolver adapters (Zod) |
+| zod | 4.x | Schema validation |
+| @tanstack/react-query | 5.x | Server state management |
 
 **Planned (not yet installed):**
-- @supabase/supabase-js + @supabase/ssr — Authentication via Supabase Auth directly from the frontend ([ADR-001](./adrs/adr-001-authentication-authorisation-flow.md)) (Phase 1b)
-- react-hook-form + @hookform/resolvers + zod — Form handling and validation (Phase 1b)
-- @tanstack/react-query — Server state management (Phase 1b)
 - Tiptap — WYSIWYG editor for ADR content (Phase 2)
 
 ## Backend (`apps/api`)

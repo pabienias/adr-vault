@@ -148,11 +148,11 @@ To prevent AI abuse and ensure the agent only answers questions related to ADRs,
 - ~~Set up Supabase project, Auth, and initial database schema with RLS.~~ Done — Schema designed and implemented (see `.ai/dev/planning/supabase-initial-schema.md`). All migrations, RLS policies, triggers, and indexes applied.
 
 ### Phase 1b: Authentication
-- Implement user registration (email + password) with Supabase Auth.
+- ~~Implement user registration (email + password) with Supabase Auth.~~ Done — Registration page, form with Zod v4 validation, React Query mutation hook, Supabase Auth error mapping. 36 tests across 8 files.
 - Implement login flow with email and password.
 - Implement logout functionality.
 - Implement session persistence across browser refreshes.
-- Build authentication UI pages (register, login) and protected route guards.
+- Build authentication UI pages (~~register~~, login) and protected route guards.
 
 **User Stories:** US-AUTH-01, US-AUTH-02, US-AUTH-03, US-AUTH-05
 

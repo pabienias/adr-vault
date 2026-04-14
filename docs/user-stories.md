@@ -14,7 +14,7 @@
 
 | ID | User Story | Notes |
 |----|-----------|-------|
-| US-AUTH-01 | As a user, I want to register with an email and password so that I can create a personal account and access ADR Vault. | |
+| US-AUTH-01 | As a user, I want to register with an email and password so that I can create a personal account and access ADR Vault. | ✅ Done — `feature/registration` |
 | US-AUTH-02 | As a user, I want to log in with my email and password so that I can access my ADRs and the system's features. | |
 | US-AUTH-03 | As a user, I want to log out so that my session is terminated and my account is protected on shared devices. | |
 | US-AUTH-04 | As a user, I want to request a password reset link via my email so that I can regain access to my account if I forget my password. | |
