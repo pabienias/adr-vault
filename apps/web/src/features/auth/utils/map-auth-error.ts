@@ -8,13 +8,21 @@ const ERROR_MESSAGES = new Map<string, string>([
 	['over_request_rate_limit', 'Too many attempts. Please try again later.'],
 	['over_email_send_rate_limit', 'Too many attempts. Please try again later.'],
 	['signup_disabled', 'Registration is currently disabled.'],
+	['invalid_credentials', 'Invalid email or password.'],
+	['email_not_confirmed', 'Please verify your email address before signing in.'],
 ]);
 
 const DUPLICATE_EMAIL_MESSAGE = 'An account with this email already exists.';
 const NETWORK_ERROR_MESSAGE = 'Something went wrong. Please try again.';
-const GENERIC_MESSAGE = 'Registration failed. Please try again.';
 
-export function mapAuthError(error: AuthError): string {
+const GENERIC_MESSAGES: Record<AuthErrorContext, string> = {
+	registration: 'Registration failed. Please try again.',
+	login: 'Login failed. Please try again.',
+};
+
+export type AuthErrorContext = 'registration' | 'login';
+
+export function mapAuthError(error: AuthError, context: AuthErrorContext): string {
 	if (error.code) {
 		const mapped = ERROR_MESSAGES.get(error.code);
 		if (mapped) {
@@ -30,5 +38,5 @@ export function mapAuthError(error: AuthError): string {
 		return NETWORK_ERROR_MESSAGE;
 	}
 
-	return GENERIC_MESSAGE;
+	return GENERIC_MESSAGES[context];
 }
