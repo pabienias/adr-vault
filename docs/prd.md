@@ -1,6 +1,6 @@
 # Product Requirements Document (PRD) - ADR Vault
 
-> **Attachments:** [User Stories](./user-stories.md)
+> **Attachments:** [User Stories](./user-stories.md) · [Design Specifications](./design/design-specifications.md) · [MVP Design PDF](./design/mvp_design.pdf)
 
 ## 1. Product Overview
 
@@ -82,6 +82,10 @@
 - **NFR-3.1 (Prompt Injection Prevention):** The system must implement safeguards to prevent users from bypassing the AI's intended purpose (answering questions based on ADRs).
 - **NFR-3.2 (Content Moderation):** The system must validate user inputs to ensure they do not contain harmful, offensive, or policy-violating content before sending them to the LLM.
 
+### 4.4 User Experience Conventions
+- **NFR-4.1 (In-App Feedback Pattern):** Transient user feedback inside the authenticated application — error messages, confirmations of successful actions, and other notifications — must be surfaced via a **toast messaging system**. Toasts are the project-wide default for non-blocking feedback (e.g., "Logout failed", "ADR saved"). Blocking feedback that prevents the user from proceeding (e.g., form field validation errors, full-page error states) is not subject to this rule and continues to render inline where appropriate.
+- **NFR-4.2 (Visual Design Source of Truth):** All visual, layout, and component decisions — color tokens, typography, spacing, density, page/form/sidebar/table/detail layouts, status pills, method badges, toast, and any future UI primitives — must follow [`docs/design/design-specifications.md`](./design/design-specifications.md) and its companion [`mvp_design.pdf`](./design/mvp_design.pdf). The specification is the authoritative contract for look-and-feel: feature-level implementation plans must cite the relevant spec sections whenever they introduce or modify UI, and any intentional deviation must be recorded in the Implementation Changelog (§8) with rationale. When the spec and a ticket disagree, the spec wins until the spec is updated.
+
 ---
 
 ## 5. Technical Architecture & Stack
@@ -149,10 +153,10 @@ To prevent AI abuse and ensure the agent only answers questions related to ADRs,
 
 ### Phase 1b: Authentication
 - ~~Implement user registration (email + password) with Supabase Auth.~~ Done — Registration page, form with Zod v4 validation, React Query mutation hook, Supabase Auth error mapping. 36 tests across 8 files.
-- Implement login flow with email and password.
+- ~~Implement login flow with email and password.~~ Done — Login page, form with Zod v4 validation, React Query mutation hook (`useLogin`), and context-aware auth error mapper distinguishing login vs. registration failure messages. 20 tests across 5 files (56 tests total across auth module).
 - Implement logout functionality.
 - Implement session persistence across browser refreshes.
-- Build authentication UI pages (~~register~~, login) and protected route guards.
+- Build authentication UI pages (~~register~~, ~~login~~) and protected route guards.
 
 **User Stories:** US-AUTH-01, US-AUTH-02, US-AUTH-03, US-AUTH-05
 
@@ -184,3 +188,18 @@ To prevent AI abuse and ensure the agent only answers questions related to ADRs,
 - Implement ADR linking (create, view, remove) with relationship types.
 
 **User Stories:** US-SUMM-01, US-SUMM-02, US-SUMM-03, US-SUMM-04, US-SEARCH-01, US-SEARCH-02, US-SEARCH-03, US-SEARCH-04, US-SEARCH-05, US-SEARCH-06, US-SEARCH-07, US-LINK-01, US-LINK-02, US-LINK-03
+
+---
+
+## 8. Implementation Changelog
+
+Records deviations from the original PRD that occurred during implementation, along with the reason for each change.
+
+### Phase 1b — Authentication
+
+| Date | Area | Change | Reason |
+|------|------|--------|--------|
+| 2026-04-14 | Phase structure | Split Phase 1 into **1a (Foundation)** and **1b (Authentication)** | Schema planning revealed enough independent work in the infrastructure layer (migrations, RLS, Supabase config) to warrant its own trackable phase. |
+| 2026-04-14 | US-AUTH-04 | Password reset deferred to a post-MVP phase | Considered non-critical for MVP viability; deprioritised to keep Phase 1b focused on core session flows. |
+| 2026-04-14 | NFR-2.1 | Clarified that authentication operations (signup, signin, signout, token refresh) communicate directly with Supabase Auth from the frontend, not via the Fastify REST API | Formalised as [ADR-001](./adrs/adr-001-authentication-authorisation-flow.md). The PRD's blanket "no direct DB communication" rule applied to data/business operations only; auth is handled by Supabase Auth natively and routing it through Fastify adds latency with no security benefit. |
+| 2026-04-21 | NFR-4.1 (new) | Added a user-experience convention requiring transient in-app feedback (errors, confirmations) to be delivered via a toast messaging system | Need for a consistent, non-blocking feedback pattern surfaced while planning the app shell (Phase 1b continuation). Without a documented convention, each feature would invent its own feedback style, producing a fragmented UX. Inline validation remains the rule for blocking, field-level errors. |

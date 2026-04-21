@@ -7,6 +7,8 @@
 ## Architectural Decisions
 
 - [ADR-001: Authentication and Authorisation Flow](docs/adrs/adr-001-authentication-authorisation-flow.md) — Next.js owns authentication (direct Supabase Auth); Fastify owns authorisation (JWT verification for data operations)
+- [ADR-002: Next.js Route Groups for Authentication Boundary](docs/adrs/adr-002-route-groups.md) — Two route groups, `(auth)` and `(app)`, each with a dedicated layout; root layout stays minimal; access policy lives in Middleware, not layouts
+- [ADR-003: End-to-End Testing Strategy with Playwright](docs/adrs/adr-003-end-to-end-testing-strategy.md) — Playwright in `apps/web/e2e/`, Chromium only, seeded test user via `storageState`; CI integration recorded as follow-up
 
 ## Key Documentation
 
