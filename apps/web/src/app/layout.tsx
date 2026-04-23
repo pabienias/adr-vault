@@ -1,16 +1,19 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Inter_Tight, JetBrains_Mono } from 'next/font/google';
+import type { ReactNode } from 'react';
 import { QueryProvider } from '@/providers/QueryProvider';
 import './globals.css';
 
-const geistSans = Geist({
-	variable: '--font-geist-sans',
+const interTight = Inter_Tight({
+	variable: '--font-inter-tight',
 	subsets: ['latin'],
+	weight: ['400', '500', '600', '700'],
 });
 
-const geistMono = Geist_Mono({
-	variable: '--font-geist-mono',
+const jetbrainsMono = JetBrains_Mono({
+	variable: '--font-jetbrains-mono',
 	subsets: ['latin'],
+	weight: ['400', '500', '600'],
 });
 
 export const metadata: Metadata = {
@@ -21,10 +24,13 @@ export const metadata: Metadata = {
 export default function RootLayout({
 	children,
 }: Readonly<{
-	children: React.ReactNode;
-}>) {
+	children: ReactNode;
+}>): ReactNode {
 	return (
-		<html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+		<html
+			lang="en"
+			className={`${interTight.variable} ${jetbrainsMono.variable} h-full antialiased`}
+		>
 			<body className="min-h-full flex flex-col">
 				<QueryProvider>{children}</QueryProvider>
 			</body>
