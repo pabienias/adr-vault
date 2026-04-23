@@ -1,5 +1,13 @@
 import { render, screen, within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+
+vi.mock('@/features/auth/components/LogoutButton', () => ({
+	LogoutButton: (): React.ReactNode => (
+		<button type="button" aria-label="Log out">
+			logout
+		</button>
+	),
+}));
 
 import { Sidebar } from './Sidebar';
 

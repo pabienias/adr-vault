@@ -19,23 +19,17 @@ describe('mapAuthError', () => {
 
 	it('maps weak_password code', () => {
 		const error = makeAuthError('Password too weak', 422, 'weak_password');
-		expect(mapAuthError(error, 'registration')).toBe(
-			'Password does not meet the requirements.',
-		);
+		expect(mapAuthError(error, 'registration')).toBe('Password does not meet the requirements.');
 	});
 
 	it('maps over_request_rate_limit code', () => {
 		const error = makeAuthError('Rate limit exceeded', 429, 'over_request_rate_limit');
-		expect(mapAuthError(error, 'registration')).toBe(
-			'Too many attempts. Please try again later.',
-		);
+		expect(mapAuthError(error, 'registration')).toBe('Too many attempts. Please try again later.');
 	});
 
 	it('maps signup_disabled code', () => {
 		const error = makeAuthError('Signups not allowed', 403, 'signup_disabled');
-		expect(mapAuthError(error, 'registration')).toBe(
-			'Registration is currently disabled.',
-		);
+		expect(mapAuthError(error, 'registration')).toBe('Registration is currently disabled.');
 	});
 
 	it('maps invalid_credentials code', () => {
@@ -52,27 +46,26 @@ describe('mapAuthError', () => {
 
 	it('falls back to message matching for "User already registered"', () => {
 		const error = makeAuthError('User already registered', 422);
-		expect(mapAuthError(error, 'registration')).toBe(
-			'An account with this email already exists.',
-		);
+		expect(mapAuthError(error, 'registration')).toBe('An account with this email already exists.');
 	});
 
 	it('returns network error message when no status', () => {
 		const error = makeAuthError('Failed to fetch');
-		expect(mapAuthError(error, 'registration')).toBe(
-			'Something went wrong. Please try again.',
-		);
+		expect(mapAuthError(error, 'registration')).toBe('Something went wrong. Please try again.');
 	});
 
 	it('returns registration generic message for unknown errors with status', () => {
 		const error = makeAuthError('Some unknown error', 500);
-		expect(mapAuthError(error, 'registration')).toBe(
-			'Registration failed. Please try again.',
-		);
+		expect(mapAuthError(error, 'registration')).toBe('Registration failed. Please try again.');
 	});
 
 	it('returns login generic message for unknown errors with status', () => {
 		const error = makeAuthError('Some unknown error', 500);
 		expect(mapAuthError(error, 'login')).toBe('Login failed. Please try again.');
+	});
+
+	it('returns logout generic message for unknown errors with status', () => {
+		const error = makeAuthError('Some unknown error', 500);
+		expect(mapAuthError(error, 'logout')).toBe('Logout failed. Please try again.');
 	});
 });

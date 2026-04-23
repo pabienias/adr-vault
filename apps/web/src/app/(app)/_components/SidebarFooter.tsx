@@ -1,5 +1,6 @@
-import { LogOut } from 'lucide-react';
 import type { ReactNode } from 'react';
+
+import { LogoutButton } from '@/features/auth/components/LogoutButton';
 
 export type SidebarFooterProps = {
 	displayName: string | null;
@@ -18,7 +19,7 @@ export function SidebarFooter({ displayName, email }: SidebarFooterProps): React
 					<span className="truncate text-[11px] text-[var(--text-faint)]">{secondaryLine}</span>
 				)}
 			</div>
-			<LogOut aria-hidden className="h-[14px] w-[14px] flex-shrink-0 opacity-60" />
+			<LogoutButton />
 		</div>
 	);
 }

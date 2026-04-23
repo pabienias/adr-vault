@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter_Tight, JetBrains_Mono } from 'next/font/google';
 import type { ReactNode } from 'react';
+import { Toaster } from '@/components/ui/sonner';
 import { QueryProvider } from '@/providers/QueryProvider';
 import './globals.css';
 
@@ -33,6 +34,7 @@ export default function RootLayout({
 		>
 			<body className="min-h-full flex flex-col">
 				<QueryProvider>{children}</QueryProvider>
+				<Toaster />
 			</body>
 		</html>
 	);
