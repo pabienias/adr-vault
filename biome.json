@@ -19,6 +19,18 @@
 			}
 		}
 	},
+	"overrides": [
+		{
+			"includes": ["apps/web/src/app/globals.css"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noDuplicateCustomProperties": "off"
+					}
+				}
+			}
+		}
+	],
 	"assist": {
 		"enabled": true,
 		"actions": {

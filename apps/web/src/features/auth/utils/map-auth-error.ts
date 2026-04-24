@@ -18,9 +18,10 @@ const NETWORK_ERROR_MESSAGE = 'Something went wrong. Please try again.';
 const GENERIC_MESSAGES: Record<AuthErrorContext, string> = {
 	registration: 'Registration failed. Please try again.',
 	login: 'Login failed. Please try again.',
+	logout: 'Logout failed. Please try again.',
 };
 
-export type AuthErrorContext = 'registration' | 'login';
+export type AuthErrorContext = 'registration' | 'login' | 'logout';
 
 export function mapAuthError(error: AuthError, context: AuthErrorContext): string {
 	if (error.code) {
